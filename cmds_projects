@@ -1,0 +1,5 @@
+python -m venv .venv 
+
+.venv\scripts\Activate.ps1
+
+(Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) (a faire si pas les droits)
