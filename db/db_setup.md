@@ -76,7 +76,7 @@ CREATE TABLE orders (
         'cancelled',
         'completed'
     )),
-    CONSTRAINT ck_orders_total_amount CHECK (total_amount >= 0)
+    CONSTRAINT ck_orders_total_amount CHECK (total_amount >= 0),
 
     CONSTRAINT fk_orders_customers
         FOREIGN KEY (customer_id)
@@ -141,6 +141,56 @@ VALUES
 ('Keyboard Logitech', 'Mechanical Keyboard', 79.99, 20, 5),
 ('Monitor Samsung', '27 inch Monitor', 249.99, 8, 3);
 ```
+
+### Orders
+
+```sql
+INSERT INTO orders (customer_id, order_date, status, total_amount)
+VALUES
+    -- Client 1
+    (1, '2026-11-01 10:30:00', 'confirmed', 959.97),
+    (1, '2026-11-02 14:20:00', 'completed', 79.99),
+
+    -- Client 2
+    (2, '2026-11-03 09:15:00', 'confirmed', 1149.98),
+    (2, '2026-11-04 16:45:00', 'draft', 89.97),
+
+    -- Client 3
+    (3, '2026-11-05 11:00:00', 'completed', 409.97),
+    (3, '2026-11-06 13:10:00', 'confirmed', 899.99);
+```
+
+### Order_lines
+
+```sql
+INSERT INTO order_lines (order_id, product_id, quantity, unit_price)
+VALUES
+    -- Commande 1 : Client 1 = 959.97 €
+    (1, 1, 1, 899.99),
+    (1, 2, 2, 29.99),
+
+    -- Commande 2 : Client 1 = 79.99 €
+    (2, 3, 1, 79.99),
+
+    -- Commande 3 : Client 2 = 1149.98 €
+    (3, 1, 1, 899.99),
+    (3, 4, 1, 249.99),
+
+    -- Commande 4 : Client 2 = 89.97 €
+    (4, 2, 3, 29.99),
+
+    -- Commande 5 : Client 3 = 409.97 €
+    (5, 3, 2, 79.99),
+    (5, 4, 1, 249.99),
+
+    -- Commande 6 : Client 3 = 899.99 €
+    (6, 1, 1, 899.99);
+```
+
+	
+
+
+
 
 ## 4. Requêtes de vérification
 

@@ -27,7 +27,15 @@ def create_customer(conn: "Connection", lastname, firstname, email, phone, addre
             """,
             (lastname, firstname, email, phone, address),
         )
-        customer_id = cursor.fetchone()[0]
+        # customer_id = cursor.fetchone()[0]
+        result = cursor.fetchone()
+
+        if result is not None:
+            customer_id = result[0]
+        else:
+            customer_id = None
+            print("No product found")
+
         return customer_id
 
 

@@ -1,4 +1,4 @@
-from psycopg import Connection, Error
+from psycopg import Connection
 
 
 def get_products(conn: "Connection"):
@@ -27,7 +27,14 @@ def create_product(conn: "Connection", name, description, price, stock, min_stoc
             """,
             (name, description, price, stock, min_stock),
         )
-        product_id = cursor.fetchone()[0]
+        result = cursor.fetchone()
+
+        if result is not None:
+            product_id = result[0]
+        else:
+            product_id = None
+            print("Erreur lors de la création du produit.")
+        
         return product_id
 
 
