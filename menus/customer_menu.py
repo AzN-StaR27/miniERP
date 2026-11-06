@@ -5,11 +5,13 @@ from repository.customer import (
     get_customers,
     update_customer,
 )
+from utils.terminal import clear_terminal, pause_terminal
+from helpers.input_helpers import get_existing_customer_id
 
 
 def create_customer_menu(conn):
 
-    lastname = input("Entrez le nom du nouveau client : ")
+    lastname = input("\nEntrez le nom du nouveau client : ")
     firstname = input("Entrez le prénom du nouveau client : ")
     email = input("Entrez l'email du nouveau client : ")
     phone = input("Entrez le N° de téléphone du nouveau client : ")
@@ -29,14 +31,16 @@ def update_customer_menu(conn):
         print(customer)
 
     print("---------------------------------")
-    id = input("Entrez l'id du client à modifier : ")
+    
+    customer_id = get_existing_customer_id(conn,"Entrez l'id du client à modifier :")
+    # id = int(input("Entrez l'id du client à modifier : "))
     lastname = input("Entrez le nom : ")
     firstname = input("Entrez le prénom : ")
     email = input("Entrez l'email : ")
     phone = input("Entrez le N° de téléphone : ")
     address = input("Entrez l'adresse : ")
 
-    count = update_customer(conn, lastname, firstname, email, phone, address, id)
+    _ = update_customer(conn, lastname, firstname, email, phone, address, customer_id)
 
     print("Client modifié avec succès !")
     # print(f"{count} lignes ont été modifié")
@@ -52,7 +56,8 @@ def delete_customer_menu(conn):
 def customer_menu(conn):
 
     while True:
-        print(" ========= MENU CLIENT =========")
+        clear_terminal()
+        print("     ========= MENU CLIENT =========")
         print("1. Liste des clients")
         print("2. Rechercher un client (par id)")
         print("3. Créer un nouveau client")
@@ -67,15 +72,61 @@ def customer_menu(conn):
             case "1":
                 customers = get_customers(conn)
 
-                print("Liste des clients : ")
+                max_last_name = max(3, max(len(str(c[1])) for c in customers))
+                max_first_name = max(6, max(len(str(c[2])) for c in customers))
+                max_mail = max(5, max(len(str(c[3])) for c in customers))
+                max_phone = max(12, max(len(str(c[4])) for c in customers))
+
+                print("\nListe des clients :\n")
                 for customer in customers:
-                    print(customer)
+
+                    id, last_name, first_name, mail, phone, _, date = customer
+                    print(f"id : {id} | nom : {last_name:<{max_last_name}} | prénom : {first_name:<{max_first_name}} | email : {mail:<{max_mail}} | N° de tel : {phone:<{max_phone}} | date d'adhésion : {date.strftime("%d/%m/%Y")}")
 
             case "2":
-                customer_id = input("ID du client : ")
-                customer = get_customer_by_id(conn, customer_id)
 
-                print(customer if customer else "Client introuvable.")
+                    customers = get_customers(conn)
+
+                    max_last_name = max(3, max(len(str(c[1])) for c in customers))
+                    max_first_name = max(6, max(len(str(c[2])) for c in customers))
+                    max_mail = max(5, max(len(str(c[3])) for c in customers))
+                    max_phone = max(12, max(len(str(c[4])) for c in customers))
+
+                    print("\nListe des clients :\n")
+
+                    ids = []
+                    for customer in customers:
+
+                        
+                        id, last_name, first_name, mail, phone, _, date = customer
+                        ids.append(int(id)) 
+                        print(f"id : {id} | nom : {last_name:<{max_last_name}} | prénom : {first_name:<{max_first_name}} | email : {mail:<{max_mail}} | N° de tel : {phone:<{max_phone}} | date d'adhésion : {date.strftime("%d/%m/%Y")}")
+
+
+                    while True:
+
+                        try:
+
+                            customer_id = int(input("\n ========= ID du client : "))
+
+                            if customer_id in ids: 
+                                 break
+
+                            print("\n ID invalide !")
+
+
+                        except ValueError: 
+                            print("\n ID invalide !")
+                    
+                    customer = get_customer_by_id(conn, customer_id)
+
+                    if customer:
+                        id, last_name, first_name, mail, phone, _, _ = customer
+                        print(
+                            f"\n infos :\n nom : {last_name}\n prénom : {first_name}\n email : {mail}\n N° de téléphone : {phone}"
+                        )
+                    else:
+                        print("Client introuvable.")
 
             case "3":
                 create_customer_menu(conn)
@@ -91,3 +142,5 @@ def customer_menu(conn):
 
             case _:
                 print("Choix invalide.")
+
+        pause_terminal()

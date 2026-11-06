@@ -1,10 +1,12 @@
-from repository.product import(
+from repository.product import (
     create_product,
     delete_product,
     get_product_by_id,
     get_products,
-    update_product
+    update_product,
 )
+from utils.terminal import clear_terminal
+
 
 def create_product_menu(conn):
 
@@ -17,6 +19,7 @@ def create_product_menu(conn):
     id = create_product(conn, name, description, price, stock, min_stock)
 
     print(f"Le produit a bien été créé avec l'ID : {id}")
+
 
 def update_product_menu(conn):
 
@@ -34,10 +37,10 @@ def update_product_menu(conn):
     stock = input("Combien en stock ? : ")
     min_stock = input("Stock minimal avant alerte : ")
 
-
     count = update_product(conn, name, description, price, stock, min_stock, id)
 
     print("Produit modifié avec succès !")
+
 
 def delete_product_menu(conn):
 
@@ -45,9 +48,11 @@ def delete_product_menu(conn):
     count = delete_product(conn, id)
     print(f"{count} ligne ont été modifié")
 
+
 def product_menu(conn):
 
     while True:
+        clear_terminal()
         print(" ========= MENU PRODUIT =========")
         print("1. Liste des produits")
         print("2. Rechercher un produit (par id)")
@@ -87,3 +92,6 @@ def product_menu(conn):
 
             case _:
                 print("Choix invalide.")
+        
+        input("Appuyez sur Enter pour revenir au menu")
+        
