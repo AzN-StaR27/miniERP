@@ -1,4 +1,5 @@
 from menus.customer_menu import customer_menu
+from menus.product_menu import product_menu
 
 # from menus.product_menu import product_menu
 # from menus.order_menu import order_menu
@@ -24,8 +25,7 @@ def main_menu(conn):
                     customer_menu(conn)
 
                 case "2":
-                    # product_menu(conn)
-                    pass
+                    product_menu(conn)
 
                 case "3":
                     # order_menu(conn)
